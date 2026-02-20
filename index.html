@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reserva Selecta | Licores Premium</title>
+    <style>
+      :root {
+        --bg: #0f1117;
+        --surface: #171a22;
+        --card: #1f2430;
+        --text: #f3f5f9;
+        --muted: #a8afc0;
+        --gold: #e8b84c;
+        --gold-soft: #f5d88d;
+        --accent: #7a4cff;
+        --ok: #4cc38a;
+        --danger: #ff6e7f;
+        --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 15% -20%, #22293a, transparent 45%),
+          radial-gradient(circle at 90% 10%, #2f1f5f, transparent 45%),
+          var(--bg);
+        line-height: 1.5;
+        scroll-behavior: smooth;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92%);
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(8px);
+        background: rgba(10, 12, 18, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav {
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+      }
+
+      .brand-badge {
+        width: 34px;
+        aspect-ratio: 1;
+        border-radius: 10px;
+        background: linear-gradient(145deg, var(--gold), #c88816);
+        display: grid;
+        place-items: center;
+        color: #121212;
+        font-weight: 900;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        opacity: 0.95;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--gold), #da9722);
+        color: #161616;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .hero {
+        padding: 70px 0 30px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2rem, 4.3vw, 3.8rem);
+        line-height: 1.08;
+        margin-bottom: 16px;
+      }
+
+      .hero-copy p {
+        color: var(--muted);
+        font-size: 1.04rem;
+        max-width: 58ch;
+        margin-bottom: 22px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .hero-card {
+        background: linear-gradient(150deg, #241f35, #1c2231 50%, #191d28);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .hero-bottle {
+        height: 300px;
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent),
+          url("https://images.unsplash.com/photo-1590479773265-7464e5d48118?auto=format&fit=crop&w=900&q=80")
+            center/cover;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 5px 11px;
+        color: var(--gold-soft);
+        font-size: 0.8rem;
+        margin-bottom: 14px;
+      }
+
+      section {
+        padding: 46px 0;
+      }
+
+      .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 18px;
+        gap: 16px;
+      }
+
+      .section-title h2 {
+        font-size: clamp(1.5rem, 3vw, 2.3rem);
+      }
+
+      .section-title p {
+        color: var(--muted);
+      }
+
+      .category-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 8px 0 22px;
+      }
+
+      .chip {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.92rem;
+        cursor: pointer;
+      }
+
+      .chip.active {
+        background: linear-gradient(145deg, var(--accent), #9f6eff);
+        border-color: transparent;
+      }
+
+      .products {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      .card figure {
+        height: 170px;
+        position: relative;
+      }
+
+      .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .discount {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: var(--danger);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 999px;
+      }
+
+      .card-body {
+        padding: 14px;
+      }
+
+      .card-actions {
+        margin-top: 12px;
+      }
+
+      .btn-block {
+        width: 100%;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .price-row {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .old {
+        color: var(--muted);
+        text-decoration: line-through;
+        font-size: 0.85rem;
+      }
+
+      .new {
+        color: var(--gold-soft);
+        font-weight: 700;
+      }
+
+      .benefits {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .benefit {
+        background: var(--surface);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 20px;
+      }
+
+      .benefit h3 {
+        margin: 8px 0 8px;
+      }
+
+      .benefit p {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .newsletter {
+        background: linear-gradient(110deg, #252f44, #201a34);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .newsletter p {
+        color: var(--muted);
+      }
+
+      .form {
+        display: flex;
+        gap: 10px;
+        min-width: 340px;
+      }
+
+      input[type="email"] {
+        flex: 1;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.8rem 1rem;
+        color: var(--text);
+      }
+
+      footer {
+        margin-top: 50px;
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        padding: 26px 0 34px;
+        color: var(--muted);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr;
+        gap: 18px;
+      }
+
+      .footer-grid h4 {
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .footer-grid ul {
+        list-style: none;
+        display: grid;
+        gap: 6px;
+      }
+
+      .copyright {
+        margin-top: 18px;
+        font-size: 0.9rem;
+      }
+
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        background: #20273a;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+        transition: all 0.25s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .newsletter {
+          grid-template-columns: 1fr;
+        }
+        .products {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .benefits,
+        .footer-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .products,
+        .benefits,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+        .nav-links {
+          display: none;
+        }
+        .form {
+          min-width: 100%;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <a href="#inicio" class="brand"><span class="brand-badge">RS</span> Reserva Selecta</a>
+        <nav class="nav-links">
+          <a href="#catalogo">Catálogo</a>
+          <a href="#categorias">Categorías</a>
+          <a href="#beneficios">Beneficios</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <button class="btn btn-secondary" id="accountButton" type="button">Mi cuenta</button>
+      </div>
+    </header>
+
+    <main id="inicio" class="container">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="pill">⚡ Envíos en 24h en ciudad</span>
+            <h1>Descubre licores premium al mejor precio.</h1>
+            <p>
+              Tu tienda online especializada en etiquetas exclusivas de Whisky, Vinos, Ron y Tequila.
+              Seleccionamos cada botella para brindarte una experiencia sofisticada, segura y con descuentos
+              especiales por temporada.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#catalogo">Comprar ahora</a>
+              <a class="btn btn-secondary" href="#newsletter">Recibir ofertas</a>
+            </div>
+          </div>
+          <aside class="hero-card">
+            <div class="hero-bottle" role="img" aria-label="Colección de licores premium"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="categorias">
+        <div class="section-title">
+          <h2>Categorías navegables</h2>
+          <p>Explora por tipo de licor y encuentra tu favorito.</p>
+        </div>
+        <div class="category-nav" aria-label="Categorías de licores">
+          <button class="chip active" data-category="all">Todos</button>
+          <button class="chip" data-category="Whisky">Whisky</button>
+          <button class="chip" data-category="Vinos">Vinos</button>
+          <button class="chip" data-category="Ron">Ron</button>
+          <button class="chip" data-category="Tequila">Tequila</button>
+        </div>
+      </section>
+
+      <section id="catalogo">
+        <div class="section-title">
+          <h2>Productos destacados con descuento</h2>
+          <p>Promociones limitadas hasta agotar stock.</p>
+        </div>
+        <div class="products" id="products">
+          <article class="card" data-category="Whisky">
+            <figure>
+              <img src="https://images.unsplash.com/photo-1628294896516-6ac1d25d58fd?auto=format&fit=crop&w=800&q=80" alt="Whisky escocés 12 años" />
+              <span class="discount">-20%</span>
+            </figure>
+            <div class="card-body">
+              <h3>Whisky Highland 12 Años</h3>
+              <p class="meta">750 ml · Escocia</p>
+              <div class="price-row"><span class="old">$95.00</span><span class="new">$76.00</span></div>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-block buy-btn" type="button" data-product="Whisky Highland 12 Años">Agregar al carrito</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" data-category="Vinos">
+            <figure>
+              <img src="https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=800&q=80" alt="Vino tinto reserva especial" />
+              <span class="discount">-15%</span>
+            </figure>
+            <div class="card-body">
+              <h3>Vino Reserva del Valle</h3>
+              <p class="meta">750 ml · Cabernet Sauvignon</p>
+              <div class="price-row"><span class="old">$42.00</span><span class="new">$35.70</span></div>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-block buy-btn" type="button" data-product="Vino Reserva del Valle">Agregar al carrito</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" data-category="Ron">
+            <figure>
+              <img src="https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?auto=format&fit=crop&w=800&q=80" alt="Ron añejo premium" />
+              <span class="discount">-18%</span>
+            </figure>
+            <div class="card-body">
+              <h3>Ron Añejo Oro 8 Años</h3>
+              <p class="meta">700 ml · Caribe</p>
+              <div class="price-row"><span class="old">$61.00</span><span class="new">$50.02</span></div>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-block buy-btn" type="button" data-product="Ron Añejo Oro 8 Años">Agregar al carrito</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" data-category="Tequila">
+            <figure>
+              <img src="https://images.unsplash.com/photo-1612154673957-8c97d7dd52f1?auto=format&fit=crop&w=800&q=80" alt="Tequila reposado artesanal" />
+              <span class="discount">-22%</span>
+            </figure>
+            <div class="card-body">
+              <h3>Tequila Reposado Azul</h3>
+              <p class="meta">700 ml · Jalisco</p>
+              <div class="price-row"><span class="old">$78.00</span><span class="new">$60.84</span></div>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-block buy-btn" type="button" data-product="Tequila Reposado Azul">Agregar al carrito</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="beneficios">
+        <div class="section-title">
+          <h2>Beneficios de comprar con nosotros</h2>
+          <p>Servicio premium desde la selección hasta la entrega.</p>
+        </div>
+        <div class="benefits">
+          <article class="benefit">
+            <p>🚚</p>
+            <h3>Entrega rápida y segura</h3>
+            <p>Despacho en menos de 24 horas en zonas urbanas y empaques reforzados para evitar daños.</p>
+          </article>
+          <article class="benefit">
+            <p>🔒</p>
+            <h3>Pagos protegidos</h3>
+            <p>Procesamos tus compras con pasarelas certificadas y monitoreo antifraude en tiempo real.</p>
+          </article>
+          <article class="benefit">
+            <p>🎁</p>
+            <h3>Programa de fidelidad</h3>
+            <p>Acumula puntos por cada compra y canjéalos por descuentos exclusivos y catas privadas.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="newsletter">
+        <div class="newsletter">
+          <div>
+            <h2>Suscríbete a nuestro newsletter</h2>
+            <p>Recibe ofertas semanales, lanzamientos exclusivos y recomendaciones personalizadas.</p>
+          </div>
+          <form class="form" action="#" method="post">
+            <label for="email" class="sr-only" style="position:absolute;left:-9999px;">Correo electrónico</label>
+            <input id="email" type="email" placeholder="tu@email.com" required />
+            <button class="btn btn-primary" type="submit">Suscribirme</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contacto">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h4>Reserva Selecta</h4>
+            <p>Especialistas en licores premium para celebraciones, regalos y colecciones privadas.</p>
+          </div>
+          <div>
+            <h4>Atención</h4>
+            <ul>
+              <li>Lun - Sáb: 9:00 a 20:00</li>
+              <li>+34 900 123 456</li>
+              <li>soporte@reservaselecta.com</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Dirección</h4>
+            <ul>
+              <li>Calle Gran Reserva 45</li>
+              <li>Madrid, España</li>
+              <li>C.P. 28013</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Enlaces</h4>
+            <ul>
+              <li><a href="#">Términos y condiciones</a></li>
+              <li><a href="#">Política de privacidad</a></li>
+              <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="copyright">© 2026 Reserva Selecta. Prohibida la venta de alcohol a menores de edad.</p>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const chips = document.querySelectorAll('.chip');
+      const cards = document.querySelectorAll('#products .card');
+      const buyButtons = document.querySelectorAll('.buy-btn');
+      const accountButton = document.getElementById('accountButton');
+      const newsletterForm = document.querySelector('.form');
+      const newsletterInput = document.getElementById('email');
+      const toast = document.getElementById('toast');
+
+      const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(showToast.timeoutId);
+        showToast.timeoutId = setTimeout(() => toast.classList.remove('show'), 2200);
+      };
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          chips.forEach((c) => c.classList.remove('active'));
+          chip.classList.add('active');
+          const category = chip.dataset.category;
+
+          cards.forEach((card) => {
+            const visible = category === 'all' || card.dataset.category === category;
+            card.style.display = visible ? 'block' : 'none';
+          });
+        });
+      });
+
+      buyButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          showToast(`${button.dataset.product} agregado al carrito.`);
+        });
+      });
+
+      accountButton.addEventListener('click', () => {
+        document.getElementById('newsletter').scrollIntoView({ behavior: 'smooth' });
+        showToast('Accede con tu correo para gestionar tu cuenta.');
+      });
+
+      newsletterForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = newsletterInput.value.trim();
+
+        if (!email) {
+          showToast('Ingresa un correo válido para suscribirte.');
+          return;
+        }
+
+        showToast('¡Suscripción exitosa! Revisa tu bandeja de entrada.');
+        newsletterForm.reset();
+      });
+    </script>
+  </body>
+</html>
